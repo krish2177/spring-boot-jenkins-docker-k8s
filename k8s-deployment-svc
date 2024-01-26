@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-jenkins-docker-k8s-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-jenkins-docker-k8s
+  template:
+    metadata:
+      labels:
+        app: spring-boot-jenkins-docker-k8s
+    spec:
+      containers:
+      - name: spring-boot-jenkins-docker-k8s
+        image: krishna35java/spring-boot-jenkins-docker-k8s
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-jenkins-docker-k8s-service
+spec:
+  selector:
+    app: spring-boot-jenkins-docker-k8s
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
+# ---
+# apiVersion: v1
+# kind: ReplicationController
+# metadata:
+#   name: spring-boot-jenkins-docker-k8s
+# spec:
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: spring-boot-jenkins-docker-k8s
+#     spec:
+#       containers:
+#       - name: nodeapp-https
+#         image: krishna35java/vkr-ekyc-app
+#         ports:
+#         - containerPort: 8080
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: spring-boot-jenkins-docker-k8s
+# spec:
+#   tls:
+#   - secretName: node-app-secret
+#   backend:
+#     serviceName: spring-boot-jenkins-docker-k8s
+#     servicePort: 80
+# " | kubectl create -f -
+
+# #Service stop & start commonds
+# $ kubectl scale rc nodeapp-https --replicas=0
+# $ kubectl scale rc nodeapp-https --replicas=1
