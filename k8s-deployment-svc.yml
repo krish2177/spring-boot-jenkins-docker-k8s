@@ -1,3 +1,8 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: default
+# ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +22,7 @@ spec:
           image: krishna35java/spring-boot-jenkins-docker-k8s
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8090
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -28,29 +33,29 @@ spec:
     app: spring-boot-jenkins-docker-k8s
   ports:
     - protocol: TCP
-      port: 8090
-      targetPort: 8090
+      port: 80
+      targetPort: 80
   type: NodePort
 
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: spring-boot-jenkins-docker-k8s-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-    - host: localhost
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: spring-boot-jenkins-docker-k8s-service
-                port:
-                  number: 8090
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: spring-boot-jenkins-docker-k8s-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   rules:
+#     - host: localhost
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: spring-boot-jenkins-docker-k8s-service
+#                 port:
+#                   number: 80
 # ---
 # apiVersion: v1
 # kind: ReplicationController
